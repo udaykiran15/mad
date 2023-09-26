@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    /* Add styling for the dark background */
+    body {
+      background-color: #000;
+      color: #fff;
+      text-align: center;
+    }
+    /* Style for the code snippets */
+    .code-snippet {
+      background-color: #000;
+      padding: 10px;
+      margin-bottom: 20px;
+      display: none;
+      text-align: left;
+    }
+    /* Style for the "Show Text" buttons */
+    .show-button {
+      background-color: #22222200;
+      color: #fff;
+      padding: 5px 10px;
+      border: none;
+      border-radius: 15px;
+      cursor: pointer;
+      margin-bottom: 10px;
+    }
+    /* Style for the "Copy Text" buttons */
+    .copy-button {
+      background-color: #333;
+      color: #fff;
+      padding: 5px 10px;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      float: right;
+    }
+  </style>
+</head>
+<body>
+
+  <button class="show-button" onclick="showText('text-file-1')">1q x2</button>
+  <button class="show-button" onclick="showText('text-file-2')">2q ext temp</button>
+  <button class="show-button" onclick="showText('text-file-3')">3q int temp</button>
+  <button class="show-button" onclick="showText('text-file-4')">4q pipes</button>
+  <button class="show-button" onclick="showText('text-file-5')">5q table</button>
+  <button class="show-button" onclick="showText('text-file-6')">6q calci</button>
+  <button class="show-button" onclick="showText('text-file-7')">7q file</button>
+  <button class="show-button" onclick="showText('text-file-8')">8q stream</button>
+  <button class="show-button" onclick="showText('text-file-9')">9q buffer</button>
+  <button class="show-button" onclick="showText('text-file-10')">10q server</button>
+  <button class="show-button" onclick="showText('text-file-11')">11q mongo</button>
+  <button class="show-button" onclick="showText('text-file-12')">12q mimport</button>
+  <!-- Add more buttons for other text files -->
+
+  <div class="code-snippet" id="text-file-1">
+    <button class="copy-button" onclick="copyToClipboard('text-file-1')">Copy Text</button>
+    <pre>
+      <code id="text-file-1-content">
+        <!-- Content will be dynamically populated here -->
+      </code>
+    </pre>
+  </div>
+
+  <div class="code-snippet" id="text-file-2">
+    <button class="copy-button" onclick="copyToClipboard('text-file-2')">Copy Text</button>
+    <pre>
+      <code id="text-file-2-content">
+        <!-- Content will be dynamically populated here -->
+      </code>
+    </pre>
+  </div>
+  
+  <div class="code-snippet" id="text-file-3">
+    <button class="copy-button" onclick="copyToClipboard('text-file-3')">Copy Text</button>
+    <pre>
+      <code id="text-file-3-content">
+        <!-- Content will be dynamically populated here -->
+      </code>
+    </pre>
+  </div>
+
+  <div class="code-snippet" id="text-file-4">
+    <button class="copy-button" onclick="copyToClipboard('text-file-4')">Copy Text</button>
+    <pre>
+      <code id="text-file-4-content">
+        <!-- Content will be dynamically populated here -->
+      </code>
+    </pre>
+  </div>
+
+  <div class="code-snippet" id="text-file-5">
+    <button class="copy-button" onclick="copyToClipboard('text-file-5')">Copy Text</button>
+    <pre>
+      <code id="text-file-5-content">
+        <!-- Content will be dynamically populated here -->
+      </code>
+    </pre>
+  </div>
+
+  <div class="code-snippet" id="text-file-6">
+    <button class="copy-button" onclick="copyToClipboard('text-file-6')">Copy Text</button>
+    <pre>
+      <code id="text-file-6-content">
+        <!-- Content will be dynamically populated here -->
+      </code>
+    </pre>
+  </div>
+
+  <div class="code-snippet" id="text-file-7">
+    <button class="copy-button" onclick="copyToClipboard('text-file-7')">Copy Text</button>
+    <pre>
+      <code id="text-file-7-content">
+        <!-- Content will be dynamically populated here -->
+      </code>
+    </pre>
+  </div>
+
+  <div class="code-snippet" id="text-file-8">
+    <button class="copy-button" onclick="copyToClipboard('text-file-8')">Copy Text</button>
+    <pre>
+      <code id="text-file-8-content">
+        <!-- Content will be dynamically populated here -->
+      </code>
+    </pre>
+  </div>
+
+  <div class="code-snippet" id="text-file-9">
+    <button class="copy-button" onclick="copyToClipboard('text-file-9')">Copy Text</button>
+    <pre>
+      <code id="text-file-9-content">
+        <!-- Content will be dynamically populated here -->
+      </code>
+    </pre>
+  </div>
+
+  <div class="code-snippet" id="text-file-10">
+    <button class="copy-button" onclick="copyToClipboard('text-file-10')">Copy Text</button>
+    <pre>
+      <code id="text-file-10-content">
+        <!-- Content will be dynamically populated here -->
+      </code>
+    </pre>
+  </div>
+
+  <div class="code-snippet" id="text-file-11">
+    <button class="copy-button" onclick="copyToClipboard('text-file-11')">Copy Text</button>
+    <pre>
+      <code id="text-file-11-content">
+        <!-- Content will be dynamically populated here -->
+      </code>
+    </pre>
+  </div>
+
+  <div class="code-snippet" id="text-file-12">
+    <button class="copy-button" onclick="copyToClipboard('text-file-12')">Copy Text</button>
+    <pre>
+      <code id="text-file-12-content">
+        <!-- Content will be dynamically populated here -->
+      </code>
+    </pre>
+  </div>
+  <!-- Add more divs for other text files -->
+
+
+  <script>
+    function showText(elementId) {
+      // Get all the text file snippets
+      var textFileSnippets = document.getElementsByClassName("code-snippet");
+
+      // Loop through all the text file snippets and hide them
+      for (var i = 0; i < textFileSnippets.length; i++) {
+        textFileSnippets[i].style.display = "none";
+      }
+
+      // Show the selected text file snippet
+      var selectedSnippet = document.getElementById(elementId);
+      selectedSnippet.style.display = "block";
+    }
+
+    function copyToClipboard(elementId) {
+      // Get the text from the text file snippet
+      var textSnippet = document.getElementById(elementId + "-content");
+      var text = textSnippet.textContent;
+
+      // Create a temporary textarea element for copying
+      var temp = document.createElement("textarea");
+      temp.value = text;
+      document.body.appendChild(temp);
+      temp.select();
+
+      // Copy the text to the clipboard
+      navigator.clipboard.writeText(temp.value)
+        .then(() => {
+            console.log('Text copied to clipboard');
+            alert('Text copied to clipboard!')
+        })
+        .catch(err => {
+            console.error('Failed to copy: ', err);
+        });
+
+      // Remove the temporary textarea
+      document.body.removeChild(temp);
+    }
+
+    // Fetch text file contents and populate code snippets
+    fetchTextFile('text-file-1', '1qw1.txt');
+    fetchTextFile('text-file-2', '2qw3.txt');
+    fetchTextFile('text-file-3', '3qw3.txt');
+    fetchTextFile('text-file-4', '4qw4.txt');    
+    fetchTextFile('text-file-5', '5qw6.txt');
+    fetchTextFile('text-file-6', '6qw7.txt');   
+    fetchTextFile('text-file-7', '7qw8.txt');
+    fetchTextFile('text-file-8', '8qw8.txt');
+    fetchTextFile('text-file-9', '9qw8.txt');
+    fetchTextFile('text-file-10', '10qw9.txt');
+    fetchTextFile('text-file-11', '11q.txt');
+    fetchTextFile('text-file-12', '12q.txt');
+    // Add more fetchTextFile calls for other text files
+
+    function fetchTextFile(elementId, filePath) {
+      fetch(filePath)
+        .then(response => response.text())
+        .then(text => {
+          var codeSnippet = document.getElementById(elementId + '-content');
+          codeSnippet.textContent = text;
+        })
+        .catch(error => console.error('Error fetching text file:', error));
+    }
+
+    document.addEventListener('contextmenu', function(e) {
+      e.preventDefault();
+    });
+
+  </script>
+</body>
+</html>
