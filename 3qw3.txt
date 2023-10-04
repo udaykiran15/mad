@@ -1,0 +1,71 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+
+// Function to calculate the greatest common divisor (GCD) of two numbers
+unsigned long long gcd(unsigned long long a, unsigned long long b) {
+    if (b == 0) return a;
+    return gcd(b, a % b);
+}
+
+// Function to calculate the modular inverse of a number 'a' modulo 'm'
+unsigned long long mod_inverse(unsigned long long a, unsigned long long m) {
+    for (unsigned long long x = 1; x < m; x++) {
+        if ((a * x) % m == 1) {
+            return x;
+        }
+    }
+    return 0; // No modular inverse exists
+}
+
+// Function to generate RSA keys
+void generate_keys(unsigned long long p, unsigned long long q, unsigned long long *n, unsigned long long *e, unsigned long long *d) {
+    // Calculate n (modulus)
+    *n = p * q;
+
+    // Calculate Euler's totient function (φ)
+    unsigned long long phi = (p - 1) * (q - 1);
+
+    // Choose a public exponent 'e' (usually a small prime)
+    *e = 65537; // Common choice for 'e'
+
+    // Calculate the private exponent 'd' (modular multiplicative inverse of 'e' modulo φ)
+    *d = mod_inverse(*e, phi);
+}
+
+// Function to encrypt a message using the public key
+unsigned long long encrypt(unsigned long long plaintext, unsigned long long e, unsigned long long n) {
+    unsigned long long ciphertext = 1;
+    for (unsigned long long i = 0; i < e; i++) {
+        ciphertext = (ciphertext * plaintext) % n;
+    }
+    return ciphertext;
+}
+
+// Function to decrypt a message using the private key
+unsigned long long decrypt(unsigned long long ciphertext, unsigned long long d, unsigned long long n) {
+    unsigned long long plaintext = 1;
+    for (unsigned long long i = 0; i < d; i++) {
+        plaintext = (plaintext * ciphertext) % n;
+    }
+    return plaintext;
+}
+
+int main() {
+    unsigned long long p = 61; // First prime
+    unsigned long long q = 53; // Second prime
+    unsigned long long n, e, d;
+
+    generate_keys(p, q, &n, &e, &d);
+
+    unsigned long long plaintext = 322; // Message to encrypt
+
+    unsigned long long ciphertext = encrypt(plaintext, e, n);
+    unsigned long long decrypted_plaintext = decrypt(ciphertext, d, n);
+
+    printf("Original message: %llu\n", plaintext);
+    printf("Encrypted message: %llu\n", ciphertext);
+    printf("Decrypted message: %llu\n", decrypted_plaintext);
+
+    return 0;
+}
