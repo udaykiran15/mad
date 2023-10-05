@@ -1,0 +1,80 @@
+#include <stdio.h>
+#include <stdint.h>
+#include <string.h>
+
+// Number of rounds in the Feistel Cipher
+#define NUM_ROUNDS 16
+
+// Function to perform Feistel Cipher round
+void feistelRound(uint32_t *left, uint32_t *right, uint32_t roundKey) {
+    uint32_t temp = *left;
+    *left = *right ^ (temp + roundKey);
+    *right = temp;
+}
+
+// Function to generate round keys from a password
+void generateRoundKeys(const char *password, uint32_t roundKeys[NUM_ROUNDS]) {
+    // Initialize round keys from the password
+    for (int i = 0; i < NUM_ROUNDS; i++) {
+        roundKeys[i] = 0;
+        for (int j = 0; j < 4; j++) {
+            roundKeys[i] |= (uint32_t)password[i * 4 + j] << (j * 8);
+        }
+    }
+}
+
+// Function to perform Feistel Cipher encryption
+void feistelEncrypt(const char *plaintext, const char *password, char *ciphertext) {
+    // Ensure the plaintext is a multiple of 8 bytes
+    size_t plaintextLength = strlen(plaintext);
+    size_t paddedLength = (plaintextLength + 7) / 8 * 8;
+
+    // Generate round keys from the password
+    uint32_t roundKeys[NUM_ROUNDS];
+    generateRoundKeys(password, roundKeys);
+
+    // Perform Feistel Cipher encryption on each block
+    for (size_t i = 0; i < paddedLength; i += 8) {
+        uint32_t left = 0;
+        uint32_t right = 0;
+
+        // Copy the plaintext block into left and right
+        for (int j = 0; j < 4; j++) {
+            left |= (uint32_t)plaintext[i + j] << (j * 8);
+            right |= (uint32_t)plaintext[i + 4 + j] << (j * 8);
+        }
+
+        // Perform Feistel rounds
+        for (int round = 0; round < NUM_ROUNDS; round++) {
+            feistelRound(&left, &right, roundKeys[round]);
+        }
+
+        // Swap left and right after rounds
+        uint32_t temp = left;
+        left = right;
+        right = temp;
+
+        // Copy the ciphertext block
+        for (int j = 0; j < 4; j++) {
+            ciphertext[i + j] = (char)(left >> (j * 8));
+            ciphertext[i + 4 + j] = (char)(right >> (j * 8));
+        }
+    }
+}
+
+int main() {
+    char plaintext[] = "Hello123";
+    char password[] = "MyKey123";
+    char ciphertext[sizeof(plaintext)];
+
+    feistelEncrypt(plaintext, password, ciphertext);
+
+    printf("Plaintext: %s\n", plaintext);
+    printf("Ciphertext: ");
+    for (size_t i = 0; i < sizeof(plaintext); i++) {
+        printf("%02X ", (unsigned char)ciphertext[i]);
+    }
+    printf("\n");
+
+    return 0;
+}
