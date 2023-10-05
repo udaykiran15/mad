@@ -1,0 +1,62 @@
+#include <stdio.h>
+#include <string.h>
+
+// DES key size in bytes
+#define DES_KEY_SIZE 8
+
+// DES block size in bytes
+#define DES_BLOCK_SIZE 8
+
+// Function to perform DES encryption
+void des_encrypt(const char *input_block, const char *key, char *output_block) {
+    // Perform DES encryption here (you need to implement this)
+    // For simplicity, you can use an external library or algorithm to perform DES encryption.
+    // You should replace this function with a proper DES encryption implementation.
+    // Example:
+    // Call your DES encryption function or library here and copy the result to the output_block.
+    memcpy(output_block, input_block, DES_BLOCK_SIZE);
+}
+
+int main() {
+    char key[DES_KEY_SIZE];              // DES encryption key
+    char iv[DES_BLOCK_SIZE];             // Initialization Vector (IV)
+    char plaintext[DES_BLOCK_SIZE];      // Input plaintext block
+    char ciphertext[DES_BLOCK_SIZE];     // Output ciphertext block
+    char previous_ciphertext[DES_BLOCK_SIZE]; // Previous ciphertext block
+
+    // Initialize the key (you should use a secure key)
+    memset(key, 0x01, DES_KEY_SIZE);
+
+    // Initialize the IV (you should use a secure IV)
+    memset(iv, 0x00, DES_BLOCK_SIZE);
+
+    // Input plaintext block (8 bytes)
+    printf("Enter 8 characters for plaintext: ");
+    fgets(plaintext, sizeof(plaintext), stdin);
+
+    // Ensure the input is exactly 8 characters
+  //  if (strlen(plaintext) != DES_BLOCK_SIZE) {
+     //   printf("Plaintext must be 8 characters long.\n");
+       // return 1;
+    //}
+
+    // XOR the plaintext with the IV (first block)
+    for (int i = 0; i < DES_BLOCK_SIZE; i++) {
+        plaintext[i] ^= iv[i];
+    }
+
+    // Perform DES encryption
+    des_encrypt(plaintext, key, ciphertext);
+
+    // Print the ciphertext
+    printf("Ciphertext: ");
+    for (int i = 0; i < DES_BLOCK_SIZE; i++) {
+        printf("%02X ", ciphertext[i] & 0xFF);
+    }
+    printf("\n");
+
+    // Save the ciphertext for the next block (for chaining)
+    memcpy(previous_ciphertext, ciphertext, DES_BLOCK_SIZE);
+
+    return 0;
+}
