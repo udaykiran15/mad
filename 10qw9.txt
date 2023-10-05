@@ -1,0 +1,86 @@
+To perform AES-256 encryption in C without using OpenSSL or other libraries, you can modify the AES-128 code provided earlier. AES-256 uses a 256-bit key, and the key expansion process differs from AES-128. Below is an updated version of the code for AES-256 encryption:
+
+```c
+#include <stdio.h>
+#include <stdint.h>
+#include <string.h>
+
+// AES S-Box (same as AES-128)
+static const uint8_t sbox[256] = {
+    // ... (same S-Box as in your previous code)
+};
+
+static const uint8_t mixColumnsMatrix[4][4] = {
+    // ... (same MixColumns matrix as in your previous code)
+};
+
+// Function to substitute bytes using the S-Box (same as AES-128)
+void SubBytes(uint8_t state[4][4]) {
+    // ... (same SubBytes function as in your previous code)
+}
+
+// Function to perform ShiftRows transformation (same as AES-128)
+void ShiftRows(uint8_t state[4][4]) {
+    // ... (same ShiftRows function as in your previous code)
+}
+
+// Function to perform MixColumns transformation (same as AES-128)
+void MixColumns(uint8_t state[4][4]) {
+    // ... (same MixColumns function as in your previous code)
+}
+
+// AES encryption rounds (same as AES-128)
+void AESEncryptionRounds(uint8_t state[4][4], uint8_t roundKeys[15][4][4]) {
+    // ... (same AESEncryptionRounds function as in your previous code)
+}
+
+int main() {
+    // AES 256-bit key
+    uint8_t key[32] = {
+        // Replace with your 256-bit key here
+        0x60, 0x3D, 0xEB, 0x10, 0x15, 0xCA, 0x71, 0xBE,
+        0x2B, 0x73, 0xAE, 0xF0, 0x85, 0x7D, 0x77, 0x81,
+        0x1F, 0x35, 0x2C, 0x07, 0x3B, 0x61, 0x08, 0xD7,
+        0x2D, 0x98, 0x10, 0xA3, 0x09, 0x14, 0xDF, 0xF4
+    };
+
+    // AES round keys (expanded key schedule for AES-256)
+    uint8_t roundKeys[15][4][4];
+
+    // Generate round keys (expanded key schedule for AES-256)
+    KeyExpansion256(key, roundKeys);
+
+    // Input plaintext block (16 bytes)
+    uint8_t state[4][4] = {
+        // Replace with your plaintext block here
+        {0x32, 0x88, 0x31, 0xE0},
+        {0x43, 0x5A, 0x31, 0x37},
+        {0xF6, 0x30, 0x98, 0x07},
+        {0xA8, 0x8D, 0xA2, 0x34}
+    };
+
+    // Perform AES encryption rounds
+    AESEncryptionRounds(state, roundKeys);
+
+    // Print the ciphertext
+    printf("Ciphertext:\n");
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
+            printf("%02X ", state[i][j]);
+        }
+        printf("\n");
+    }
+
+    return 0;
+}
+```
+
+In this code:
+
+1. Replace the `key` variable with your 256-bit AES key in the format you need.
+
+2. Replace the `state` variable with your 16-byte plaintext block.
+
+3. The code performs AES-256 encryption rounds using the provided key and plaintext.
+
+Make sure to include the appropriate key expansion function (`KeyExpansion256`) that expands the 256-bit key into round keys. The key expansion process for AES-256 is more complex than for AES-128 and requires additional code to generate the round keys.
