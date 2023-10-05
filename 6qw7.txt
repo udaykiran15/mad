@@ -1,0 +1,131 @@
+#include <stdio.h>
+#include <stdlib.h>
+//sdes
+// Initial permutation table
+int initial_permutation[] = {2, 6, 3, 1, 4, 8, 5, 7};
+
+// Key generation permutation table
+int key_permutation[] = {6, 3, 7, 4, 8, 5, 10, 9};
+
+// Expansion permutation table
+int expansion_permutation[] = {4, 1, 2, 3, 2, 3, 4, 1};
+
+// P4 permutation table
+int p4_permutation[] = {2, 4, 3, 1};
+
+// S-boxes (S0 and S1)
+int s0[4][4] = {
+    {1, 0, 3, 2},
+    {3, 2, 1, 0},
+    {0, 2, 1, 3},
+    {3, 1, 3, 2}
+};
+
+int s1[4][4] = {
+    {0, 1, 2, 3},
+    {2, 0, 1, 3},
+    {3, 0, 1, 0},
+    {2, 1, 0, 3}
+};
+
+// P4 permutation
+int p4(int input) {
+    int output = 0;
+    for (int i = 0; i < 4; i++) {
+        int bit = (input >> (3 - i)) & 1;
+        output |= (bit << (3 - p4_permutation[i]));
+    }
+    return output;
+}
+
+// S-box substitution
+int sbox(int input, int sbox[][4]) {
+    int row = ((input >> 2) & 0x02) | (input & 0x01);
+    int col = (input >> 1) & 0x03;
+    return sbox[row][col];
+}
+
+// Round function
+int round(int input, int key) {
+    int expanded_input = 0;
+    for (int i = 0; i < 8; i++) {
+        int bit = (input >> (7 - i)) & 1;
+        expanded_input |= (bit << (7 - expansion_permutation[i]));
+    }
+    
+    int xor_result = expanded_input ^ key;
+    
+    int sbox_input1 = (xor_result >> 4) & 0x0F;
+    int sbox_input2 = xor_result & 0x0F;
+    
+    int sbox_output1 = sbox(sbox_input1, s0);
+    int sbox_output2 = sbox(sbox_input2, s1);
+    
+    int p4_input = (sbox_output1 << 2) | sbox_output2;
+    return p4(p4_input);
+}
+
+// SDES encryption function
+int sdes_encrypt(int plaintext, int key) {
+    int permuted_plaintext = 0;
+    for (int i = 0; i < 8; i++) {
+        int bit = (plaintext >> (7 - i)) & 1;
+        permuted_plaintext |= (bit << (7 - initial_permutation[i]));
+    }
+
+    int left = permuted_plaintext >> 4;
+    int right = permuted_plaintext & 0x0F;
+
+    int key1 = 0;
+    int key2 = 0;
+
+    // Generate key1 and key2
+    for (int i = 0; i < 8; i++) {
+        int bit = (key >> (9 - key_permutation[i])) & 1;
+        key1 |= (bit << (7 - i));
+    }
+
+    key2 = ((key1 << 1) | ((key1 >> 7) & 1)) & 0xFF;
+
+    // Initial permutation
+    int temp = right;
+    right = left ^ round(right, key1);
+    left = temp;
+
+    // Swap left and right
+    temp = left;
+    left = right;
+    right = temp;
+
+    // Initial permutation
+    int ciphertext = 0;
+    for (int i = 0; i < 8; i++) {
+        int bit = (left >> (7 - i)) & 1;
+        ciphertext |= (bit << (7 - initial_permutation[i]));
+    }
+
+    for (int i = 0; i < 8; i++) {
+        int bit = (right >> (7 - i)) & 1;
+        ciphertext |= (bit << (7 - initial_permutation[i + 8]));
+    }
+
+    return ciphertext;
+}
+
+int main() {
+    int plaintext, key;
+
+    printf("Enter 8-bit plaintext (in hexadecimal): ");
+    scanf("%x", &plaintext);
+
+    printf("Enter 8-bit key (in hexadecimal): ");
+    scanf("%x", &key);
+
+    int ciphertext = sdes_encrypt(plaintext, key);
+
+    printf("Plaintext: %02X\n", plaintext);
+    printf("Key: %02X\n", key);
+    printf("Ciphertext: %02X\n", ciphertext);
+
+    return 0;
+}
