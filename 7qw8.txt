@@ -1,0 +1,33 @@
+#include <stdio.h>
+#include <math.h>
+
+// Function to find the square root using a brute force approach
+double bruteForceSqrt(double x, double epsilon) {
+    double guess = 0.0;
+    double increment = 0.01;
+
+    while (fabs(guess * guess - x) > epsilon) {
+        guess += increment;
+    }
+
+    return guess;
+}
+
+int main() {
+    double num, epsilon;
+    
+    printf("Enter a number: ");
+    scanf("%lf", &num);
+
+    printf("Enter an epsilon value (tolerance for accuracy): ");
+    scanf("%lf", &epsilon);
+
+    if (num < 0) {
+        printf("Cannot find the square root of a negative number.\n");
+    } else {
+        double result = bruteForceSqrt(num, epsilon);
+        printf("Approximate square root of %.2lf is %.5lf\n", num, result);
+    }
+
+    return 0;
+}
